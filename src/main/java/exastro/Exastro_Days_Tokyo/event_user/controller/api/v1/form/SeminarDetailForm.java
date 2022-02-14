@@ -17,6 +17,8 @@ package exastro.Exastro_Days_Tokyo.event_user.controller.api.v1.form;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,23 +26,50 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SeminarDetailForm extends SeminarForm{
-
+public class SeminarDetailForm {
+	
+//	セミナーID
+	private int seminarId;
+	
+//	セミナー名
+	private String seminarName;
+	
+//	ブロックID
+	private int blockId;
+	
+//	ブロック名
+	private String blockName;
+	
+//	開催日時(開始)
+	@JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
+	private Date startDatetime;
+	
+//	セミナー参加済みフラグ
+	private boolean isParticipated;
+	
+//	定員オーバーフラグ
+	private boolean isCapacityOver;
+	
 //	登壇者ID
 	private Integer speakerId;
 	
 //	セミナー概要
 	private String seminarOverview;
-
+	
 //	定員
 	private Integer capacity;
 	
 	public SeminarDetailForm(int seminarId, String seminarName, int blockId, String blockName, Date startDatetime ,
 			Integer speakerId, String seminarOverview, Integer capacity){
-		super(seminarId, seminarName, blockId, blockName, startDatetime);
+		this.seminarId = seminarId;
+		this.seminarName = seminarName;
+		this.blockId = blockId;
+		this.blockName = blockName;
+		this.startDatetime = startDatetime;
+		this.isParticipated = false;
+		this.isCapacityOver = false;
 		this.speakerId = speakerId;
 		this.seminarOverview = seminarOverview;
 		this.capacity = capacity;
-	}	
+	}
 }
-
