@@ -15,36 +15,57 @@
 
 package exastro.Exastro_Days_Tokyo.event_user.controller.api.v1;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import exastro.Exastro_Days_Tokyo.event_user.controller.api.v1.form.SeminarDetailForm;
-import exastro.Exastro_Days_Tokyo.event_user.service.SeminarUserService;
+import exastro.Exastro_Days_Tokyo.event_user.service.dto.ParticipantDto;
 import exastro.Exastro_Days_Tokyo.event_user.service.dto.SeminarDetailDto;
 
 @RestController
 @RequestMapping("/api/v1/seminar")
 public class SeminarUserController extends BaseSeminarController {
 	
-	public SeminarUserController(@Autowired SeminarUserService service) {
-		this.service = service;
+	public SeminarUserController() {
 	}
 	
 	@GetMapping("/{seminarId}")
-	public SeminarDetailForm seminarDetail(@PathVariable(value = "seminarId") @Validated int seminarId) {
+	public SeminarDetailForm seminarDetail(@PathVariable(value = "seminarId") @Validated int seminarId,
+			@RequestParam (name = "user_id", defaultValue = "") String userId, @RequestParam (name = "kind_of_sso", defaultValue = "") String kindOfSso) {
 		
-		//logger.debug("method called. [ " + Thread.currentThread().getStackTrace()[1].getMethodName() + " ]");
+		logger.debug("method called. [ " + Thread.currentThread().getStackTrace()[1].getMethodName() + " ]");
 		
 		SeminarDetailForm seminarDetail = null;
-
+		
 		try {
 			SeminarDetailDto e = service.getSeminarDetail(seminarId);
 			seminarDetail = new SeminarDetailForm(e.getSeminarId(), e.getSeminarName(), e.getBlockId(), e.getBlockName(),
-					 e.getStartDatetime(), e.getSpeakerId(), e.getSeminarOverview(), e.getCapacity());		
+					 e.getStartDatetime(), e.getSpeakerId(), e.getSeminarOverview(), e.getCapacity());
+			
+			// 申込済みのセミナーかどうか判定
+			List<ParticipantDto> participantList = participantService.getParticipant(userId, kindOfSso);
+			
+			for (ParticipantDto participant : participantList) {
+				if (String.valueOf(seminarDetail.getSeminarId()).contains(String.valueOf(participant.getSeminarId()))){
+					seminarDetail.setParticipated(true);
+				}
+			}
+			
+			// セミナーが定員上限に達しているか判定
+			Integer capacity = e.getCapacity();
+			Integer countParticipant = participantService.countParticipant(seminarId);
+			
+			if (capacity == null) {
+				seminarDetail.setCapacityOver(false);
+			}else if (countParticipant >= capacity) {
+				seminarDetail.setCapacityOver(true);
+			}
 		}
 		catch(Exception e) {
 			logger.debug(e.getMessage(), e);
@@ -53,5 +74,4 @@ public class SeminarUserController extends BaseSeminarController {
 		
 		return seminarDetail;
 	}
-
 }

@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import exastro.Exastro_Days_Tokyo.event_user.controller.api.v1.form.SeminarForm;
+import exastro.Exastro_Days_Tokyo.event_user.service.ParticipantService;
 import exastro.Exastro_Days_Tokyo.event_user.service.SeminarService;
 
 public class BaseSeminarController {
@@ -33,6 +34,8 @@ public class BaseSeminarController {
 
 	@Autowired
 	protected SeminarService service;
+	@Autowired
+	protected ParticipantService participantService;
 	
 	public BaseSeminarController() {
 		
