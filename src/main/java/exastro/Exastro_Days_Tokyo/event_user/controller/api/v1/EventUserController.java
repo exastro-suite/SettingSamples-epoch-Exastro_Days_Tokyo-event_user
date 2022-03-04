@@ -18,12 +18,14 @@ package exastro.Exastro_Days_Tokyo.event_user.controller.api.v1;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import exastro.Exastro_Days_Tokyo.event_user.controller.api.v1.form.EventDetailForm;
 import exastro.Exastro_Days_Tokyo.event_user.controller.api.v1.form.ParticipantForm;
@@ -46,6 +48,9 @@ public class EventUserController extends BaseEventController {
 		
 		try {
 			EventDetailDto eventDetailDto = service.getEventDetail(eventId);
+			if(eventDetailDto == null) {
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found data.");
+			}
 			eventDetail = new EventDetailForm(eventDetailDto.getEventId(), eventDetailDto.getEventName(),
 					eventDetailDto.getEventOverview(), eventDetailDto.getEventDate(), eventDetailDto.getEventVenue(),
 					eventDetailDto.getSpeakerIDs());
@@ -71,7 +76,8 @@ public class EventUserController extends BaseEventController {
 			// セミナーリストを取得
 			seminarList = seminarService.getSeminar(eventId)
 					.stream()
-					.map(s -> new SeminarForm(s.getSeminarId(), s.getSeminarName(), s.getBlockId(), s.getBlockName(), s.getStartDatetime()))
+					.map(s -> new SeminarForm(s.getSeminarId(), s.getSeminarName(), s.getBlockId(),
+							s.getBlockName(), s.getStartDatetime(), s.getSpeakerId()))
 					.collect(Collectors.toList());
 			
 			// 申込済みセミナーの参加者情報を取得

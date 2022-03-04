@@ -49,4 +49,7 @@ public class SeminarVO {
 	@JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
 	private Date startDatetime;
 	
+//	登壇者ID
+	private Integer speakerId;
+	
 }

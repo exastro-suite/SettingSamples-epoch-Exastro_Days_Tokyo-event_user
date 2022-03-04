@@ -24,5 +24,8 @@ public class SeminarDto {
 	private String blockName;
 
 //	開催日時(開始)
-	private Date startDatetime;	
+	private Date startDatetime;
+	
+//	登壇者ID
+	private Integer speakerId;
 }

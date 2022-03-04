@@ -54,7 +54,10 @@ public class SeminarForm {
 //	定員オーバーフラグ
 	private boolean isCapacityOver;
 	
-	public SeminarForm(int seminarId, String seminarName, int blockId, String blockName, Date startDatetime) {
+//	登壇者ID
+	private int speakerId;
+	
+	public SeminarForm(int seminarId, String seminarName, int blockId, String blockName, Date startDatetime, int speakerId) {
 		this.seminarId = seminarId;
 		this.seminarName = seminarName;
 		this.blockId = blockId;
@@ -62,5 +65,6 @@ public class SeminarForm {
 		this.startDatetime = startDatetime;
 		this.isParticipated = false;
 		this.isCapacityOver = false;
+		this.speakerId = speakerId;
 	}
 }

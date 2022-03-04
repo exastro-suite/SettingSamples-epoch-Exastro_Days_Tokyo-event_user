@@ -38,6 +38,9 @@ public class EventUserService extends BaseEventService implements EventService {
 		
 		try {
 			EventDetailVO edvo = repository.getEventDetail(eventId);
+			if(edvo == null) {
+				return null;
+			}
 			eventDetail = new EventDetailDto(edvo.getEventId(), edvo.getEventName(), edvo.getEventOverview(),
 					edvo.getEventDate(), edvo.getEventVenue(), edvo.getSpeakerIDs());
 		}

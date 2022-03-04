@@ -20,7 +20,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import exastro.Exastro_Days_Tokyo.event_user.repository.config.ConnectionConfig;
@@ -71,6 +73,12 @@ public class EventRepository extends BaseRepository {
 			resBody = restTemplate.getForObject(apiUrl, EventDetailVO.class, eventId);
 			
 			return resBody;
+		}
+		catch(HttpClientErrorException e) {
+			if(e.getStatusCode() == HttpStatus.NOT_FOUND) {
+				return null;
+			}
+			throw e;
 		}
 		catch(Exception e) {
 			throw e;

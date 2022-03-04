@@ -51,7 +51,8 @@ public class BaseSeminarController {
 		try {
 			seminarList = service.getSeminar(eventId)
 					.stream()
-					.map(s -> new SeminarForm(s.getSeminarId(), s.getSeminarName(), s.getBlockId(), s.getBlockName(), s.getStartDatetime()))
+					.map(s -> new SeminarForm(s.getSeminarId(), s.getSeminarName(), s.getBlockId(),
+							s.getBlockName(), s.getStartDatetime(), s.getSpeakerId()))
 					.collect(Collectors.toList());
 		}
 		catch(Exception e) {
